@@ -3,6 +3,17 @@ sympy on pypyjs
 A test project to see if SymPy can run on PyPy.js
 
 
+TODO
+----
+
+  - Try other python-->js compilers
+  - Port the nicer shell (this one is horrible)
+  - Port the editor tab PyPy.js
+
+
+
+
+
 Install
 -------
 

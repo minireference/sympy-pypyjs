@@ -1,0 +1,10 @@
+[submodule "pypyjs-release-nojit"]
+	path = pypyjs-release-nojit
+	url = https://github.com/pypyjs/pypyjs-release-nojit.git
+[submodule "sympy"]
+	path = sympy
+	url = https://github.com/minireference/sympy.git
+	branch = feature/pypyjs
+[submodule "mpmath"]
+	path = mpmath
+	url = https://github.com/fredrik-johansson/mpmath.git

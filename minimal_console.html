@@ -1,0 +1,160 @@
+<html>
+<head>
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta charset="utf-8">
+    <title>PyPy.js - minimal console</title>
+    <style>
+    button {
+        display:none;
+    }
+    pre#output, textarea {
+        width: 90%;
+        height: 45%;
+        margin: 1em;
+        padding: 1em;
+    }
+    pre#cmdinput {
+        width: 90%;
+        height: 6%;
+        margin: 1em;
+        padding: 1em;
+    }
+
+    pre {
+        border: 2px solid #ddd;
+    }
+    </style>
+</head>
+<body>
+    <h1>PyPy.js minimal console</h1>
+    <p>
+        This is only a minimal console!<br />
+        Only single string input works and only a few special keys are supported.<br />
+        A full featured console, that used <strong>jq-console</strong> is here: <a href="http://pypyjs.org">pypyjs.org</a>
+    </p>
+    <a href="https://github.com/jedie/pypyjs-examples"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/e7bbb0521b397edbd5fe43e7f760759336b5e05f/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_green_007200.png"></a>
+    <noscript><h3>Please enable JavaScript for using PyPy.js</h3></noscript>
+    <pre id="output"></pre>
+    <h3>Type commands in the box below:</h3>
+    <pre id="cmdinput" contenteditable='true'></pre>
+    <p>
+        PyPy.js is an experiment in building a fast and compliant python environment for the web.
+    <br/>
+        It uses the <a href="http://pypy.org/">PyPy</a> python interpreter, compiled for the web via
+        <a href="http://emscripten.org">emscripten</a>, with a custom JIT backend that emits <a href="http://asmjs.org">asm.js</a>
+        code at runtime.
+    </p>
+</div>
+<script src="pypyjs-release-nojit/lib/Promise.min.js" type="text/javascript" charset="utf-8" onerror="JavaScript:alert('Error loading file ['+this.src+'] !');"></script>
+<script src="pypyjs-release-nojit/lib/FunctionPromise.js" type="text/javascript" charset="utf-8" onerror="JavaScript:alert('Error loading file ['+this.src+'] !');"></script>
+<script src="pypyjs-release-nojit/lib/pypyjs.js" type="text/javascript" charset="utf-8" onerror="JavaScript:alert('Error loading file ['+this.src+'] !');"></script>
+<script src="https://code.jquery.com/jquery-1.11.3.min.js" onerror="JavaScript:alert('Error loading file ['+this.src+'] !');"></script>
+<script src="https://code.jquery.com/jquery-migrate-1.2.1.min.js" onerror="JavaScript:alert('Error loading file ['+this.src+'] !');"></script>
+<script type="text/javascript" charset="utf-8">
+try {
+    jQuery(document);
+} catch (e) {
+    alert("Error, jQuery JS not loaded!\n Original error was:" + e);
+}
+function console_exec(code) {
+    console.log("exec: '" + code + "'");
+    pypyjs.exec(code).then(function() {
+        console.log("OK");
+        // pypyjs.stdout("\n>>> ");
+    }, function (err) {
+        // err is an instance of PyPyJS.Error
+        console.log("ERROR: "+err.name+": "+err.message+"!)");
+        pypyjs.stderr(err.trace); // the human-readable traceback, as a string
+    });
+}
+$(document).ready(function() {
+    out = $("#output");
+    cmdinput = $("#cmdinput");
+    pypyjs.stdout = pypyjs.stderr = function(data) {
+        out.append(data);
+    }
+    pypyjs.stdout.reset = pypyjs.stderr.reset = function(data) {
+        out.empty();
+    }
+
+    pypyjs.stdout("loading PyPy.js...");
+    var pseudo_status = setInterval(function(){ pypyjs.stdout("."); }, 500);
+    pypyjs.ready().then(function() {
+        clearInterval(pseudo_status);
+        pypyjs.stdout.reset();
+        pypyjs.stdout('Welcome to PyPy.js!\nrunning `from sympy import *` wait a few seconds...\n');
+        console_exec("import sys;print sys.version;");
+        console_exec("from sympy import *");
+        //  console_exec("x, y, z, t = symbols('x y z t')");
+
+        window.inputs="";
+        cmdinput.keyup(function( event ) {
+            //console.log("keyup code: " + event.keyCode);
+
+            // var keycode = event.keyCode;
+            // var valid =
+            //     (keycode > 47 && keycode < 58)   || // number keys
+            //     keycode == 32 || keycode == 13   || // spacebar & return key(s) (if you want to allow carriage returns)
+            //     (keycode > 64 && keycode < 91)   || // letter keys
+            //     (keycode > 95 && keycode < 112)  || // numpad keys
+            //     (keycode > 185 && keycode < 193) || // ;=,-./` (in order)
+            //     (keycode > 218 && keycode < 223);   // [\]' (in order)
+
+            switch (event.keyCode) {
+                case 9:
+                case 16:
+                case 17:
+                case 18:
+                case 37:
+                case 38:
+                case 39:
+                case 40:
+                case 224:
+                    break;
+                case 27:    // esc key
+                    // window.inputs="";
+                    pypyjs.stdout.reset();
+                    break;
+                case 13:    // enter
+                    //pypyjs.stdout("\n");
+                    var command = cmdinput.html().split("<br>").join("\n");
+                    command = command.split("<div>").join("");
+                    command = command.split("</div>").join("");
+                    console_exec(command + "\n");
+                    cmdinput.text('');
+                    // window.inputs="";
+                    break;
+                case 8: // backspace
+                    //window.inputs = window.inputs.substring(0,window.inputs.length-1);
+                    break;
+                default:
+                    break;
+                    //window.inputs += event.key;
+                    //window.inputs);
+                    //event.stopPropagation();
+                    //event.preventDefault();
+                    //event.stopImmediatePropagation();
+            }
+        });
+        // cmdinput.on('paste', function(e) {
+        //     console.log('in paste function...');
+        //     var clipboardData, pastedData;
+        //
+        //     // Get pasted data via clipboard API
+        //     clipboardData = e.clipboardData || window.clipboardData || e.originalEvent.clipboardData;
+        //     pastedData = clipboardData.getData('Text');
+        //
+        //     window.inputs += pastedData;
+        //     pypyjs.stdout(pastedData);
+        //
+        //     // Stop data actually being pasted into div
+        //     e.stopPropagation();
+        //     e.preventDefault();
+        //     e.stopImmediatePropagation();
+        //   })
+
+    });
+});
+</script>
+</body>
+</html>

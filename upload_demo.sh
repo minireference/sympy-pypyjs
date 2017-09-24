@@ -5,7 +5,9 @@ rm pypyjs_sympy_demo.tgz
 tar -czf pypyjs_sympy_demo.tgz \
     --exclude='^sympy' \
     --exclude='^mpmath' \
-    minimal_console.html \
+    index.html \
+    css \
+    js \
     pypyjs-release-nojit/
 
 echo "Uploading pypyjs_sympy_demo.tgz to server ..."
@@ -20,5 +22,5 @@ mkdir pypyjs_sympy_demo
 cp pypyjs_sympy_demo.tgz pypyjs_sympy_demo/
 cd pypyjs_sympy_demo/
 tar -xzf pypyjs_sympy_demo.tgz
-echo DONE deploying: see https://minireference.com/static/tmp/pypyjs_sympy_demo/minimal_console.html
+echo DONE deploying: see https://minireference.com/static/tmp/pypyjs_sympy_demo/
 ENDSSH

@@ -1,0 +1,21 @@
+#editor, #actions, #loading, .CodeMirror {
+    display:none;
+}
+.CodeMirror {
+    border-top: 1px solid black; border-bottom: 1px solid black;
+}
+#console {
+    position: absolute;
+    width: 90%;
+}
+.float_right {
+    float:right;
+}
+
+.CodeMirror, #console {
+    transition: height 1s ease;
+    transition-delay: 0.2s; /* fix for hit the run button */
+}
+/* high / low will be added/removed by JS */
+.CodeMirror.high, #console.high { height: 60%; }
+.CodeMirror.low, #console.low { height: 20%; }

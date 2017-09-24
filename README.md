@@ -1,13 +1,12 @@
 sympy on pypyjs
 ===============
-A test project to see if SymPy can run on PyPy.js
+A test project to see if SymPy runs on PyPy.js. Seems to run fine...
 
 
 TODO
 ----
 
   - Try other python-->js compilers
-  - Port the nicer shell (this one is horrible)
   - Port the editor tab PyPy.js
 
 
@@ -35,7 +34,7 @@ Deploy
 
 Manual testing
 --------------
-1. Go to https://minireference.com/static/tmp/pypyjs_sympy_demo/minimal_console.html
+1. Go to https://minireference.com/static/tmp/pypyjs_sympy_demo/
 2. **WAIT 10 seconds** (sympy module is loading async)
 3. Copy paste the following code into the bottom box:
 
@@ -46,5 +45,4 @@ print( solve(x**2-3,x) )
 print( simplify(sin(x)**2 + cos(x)**2) )
 ```
 
-Note: make sure you're pasting plain text and not rich text.
 
